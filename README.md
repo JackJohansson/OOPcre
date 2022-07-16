@@ -61,7 +61,7 @@ PHP version 8.1, such as enums and readonly properties, so it needs at least PHP
 ### 3) Structure & Usage
 Below we will explain how to start using any regex operations, mention a list of all provided methods, and explain them a bit.
 
-####3.1) Starting a regex operation
+#### 3.1) Starting a regex operation
 To start doing any operation using **OOPCRE**, a new instance of the `\OOPCRE\Regex` class needs to be created. This
 class requires the regex subject to be passed to its constructor:
 
@@ -93,7 +93,7 @@ The most common use of this would be to enable exceptions on errors, which cause
 $regex->setConfig( \OOPCRE\Foundation\Definition\Option::ENABLE_EXCEPTIONS, TRUE );
 ```
 
-####3.2) The `Preg*` class set
+#### 3.2) The `Preg*` class set
 Now that we have instantiated our subject, we can use one of the `Preg*` classes to start performing regex operations. You can access these classes by calling one of these methods on your regex subject:
 
 ```php
@@ -142,7 +142,7 @@ Returns an instance of the `\OOPCRE\Foundation\PCRE\PregSplit` class and is simi
 
 Each of these classes implement the `\OOPCRE\Foundation\Skeleton\PcreSkeleton` interface and extend the `\OOPCRE\Foundation\PCRE\PregBase` abstract class. The code is well-documented, so any proper IDE will provide full auto-completion. Now let's try to do a basic regex to find some text.
 
-###4) Basic Example
+### 4) Basic Example
 We will try to see if the subject contains alphanumeric text, using the `match()` method and with the help of the `\OOPCRE\Foundation\Pattern\PatternBuilder` class. This class provides an easy and convenient way to build the regex without knowing anything about regex patterns.
 
 We start building the pattern by calling the `patterns()` method:
@@ -163,7 +163,7 @@ if( $match->success() ) {
 
 Other operations such as `matchAll()` or `filter()` provide extra methods such as `count()` or `results()` depending on the situation. For example, calling the `count()` method on the `\OOPCRE\Foundation\PCRE\PregMatchAll` ( which is returned by `matchAll()` method ) will return the number of matches.
 
-###5) Advanced Usage
+### 5) Advanced Usage
 Now that we had some fun matching basic strings, let's try a real example. We will try to match an image tag inside an HTML code. Let's set some modifiers first. We'll tell the program not to stop on new lines, and ignore case:
 ```php
 $match->modifiers()->caseInsensitive()->multiline();
@@ -192,10 +192,10 @@ Now we can run the `execute()` method as we did previously and check the result.
 
 Please note that the default delimiter is set to `~` by the application, but it can be changed. Also, by default, the application will not try to escape the pattern, but this can also be enabled.
 
-###6) Digging deeper into structure
+### 6) Digging deeper into structure
 Let's take a deeper look into the application's structure and break it down to smaller parts to know exactly what's going on. We'll start by looking at the smallest and most important part of the application, the `\OOPCRE\Regex` class.
 
-#####6.1) Regex Class
+##### 6.1) Regex Class
 As mentioned earlier, to start any regex operation, we need to instantiate the `\OOPCRE\Regex` class and pass our subject to it. This class provided the following methods:
 
 ```php
@@ -224,24 +224,24 @@ As mentioned earlier, to start any regex operation, we need to instantiate the `
 ->split();
 ```
 
-####6.2) Configurator Class
+#### 6.2) Configurator Class
 We'll start by taking a look at the configurator. Calling the first 2 configuration methods will return an instance of the `\OOPCRE\Foundation\Configurator` class, which also supports chaining methods on the `setConfig()` method. The `setConfig()` and `getConfig()` methods both accepts an instance of the `\OOPCRE\Foundation\Definition\Option` enum as their first argument, which is the desired option that we want to work with. The `setConfig()` method also accepts a second argument, which is the value of the given option to be set. To view a list of all possible options and their default values, take a look at the `Option` enum.
 
-####6.3) Error handler class
+#### 6.3) Error handler class
 By default, exceptions are disabled by the application. This means that errors will silently be ignored and the application will not halt after encountering a fatal error. However, this means that the results are not reliable. If the exceptions are not enabled, all the errors will be logged into a bag, handled by the `\OOPCRE\Foundation\Bag\ErrorBag` class. This class implements the `\OOPCRE\Foundation\Bag\TraversableBag` interface, which means you can iterate over it like an array. To get the instance of this class, call the `errorBag()` method on the `Regex` class. The other methods function as described below:
 + `errorBag()` returns the only instance of the `ErrorBag` class.
 + `errors()` method will call the `items()` method on the `ErrorBag` class, which returns an array of occurred and logged errors.
 + `lastError()` will return the last exception that has been silently logged. It returns `null` if no exceptions have been thrown.
 + `lastErrorMessage()` method will try to return the textual message of the last error occurred. It returns an empty string if no error has been logged.
 
-####6.4) Pattern class
+#### 6.4) Pattern class
 Each pattern that is registered in any way, will be stored as an instance of the base abstract `\OOPCRE\Foundation\Pattern\Pattern` class, which is extended internally by other specific types of pattern. You can think of this class as the smallest building blocks of the pattern. For example, a single character, or a number, or a range of characters.
 
 Each specific pattern contains a static `create()` method, which accepts an input. The input can vary based on each pattern, so it's not type-hinted. However, it will be validated and if it doesn't match the bare-minimum of the requirements, an exception will be raised or logged.
 
 The `create()` method should not be directly used, and it should be used internally by the `PatternBuilder` class, which we will discuss later. 
 
-####6.5) Quantifier builder class
+#### 6.5) Quantifier builder class
 The `Pattern` class uses the `\OOPCRE\Foundation\Contract\ManagesQuantifier` trait, which allows multiple quantifiers to be applied to a pattern:
 
 ```php
@@ -268,10 +268,10 @@ The above trait manages the `\OOPCRE\Foundation\Pattern\QuantifierBuilder` class
 
 To learn more about the last 3 methods, take a look at [this question](https://stackoverflow.com/q/5319840) on StackOverflow.
 
-####6.6) Pattern builder class
+#### 6.6) Pattern builder class
 We talked about the `Pattern` class above, and how it works. But how do we add these patterns, if we're not supposed to instantiate the `Pattern` class directly? Here's where the `\OOPCRE\Foundation\Pattern\PatternBuilder` class comes in handy. This class offers 3 extensive sets of helper methods that can register even the most complex patterns. These 3 sets of methods are prefixed as below:
 
-####6.6.1) The `->add*()` method set
+#### 6.6.1) The `->add*()` method set
 These methods are prefixed with the `add` keyword, and will return an instance of the `Pattern` class. This allows us to furthermore customize the pattern, such as setting quantifiers. The full set of  `add*()` methods is as described below:
 
 ```php
@@ -327,7 +327,7 @@ Accepts an instance of the `\OOPCRE\Foundation\Definition\Unprintable` enum, and
 ```
 Will accept an instance of the `\OOPCRE\Foundation\Definition\Whitespace` enum, and will match a whitespace character. Defaults to a single space.
 
-####6.6.2) The `->simple*()` method set
+#### 6.6.2) The `->simple*()` method set
 These methods are for adding a very basic item to the pattern builder. They do not return the instance of the created `Pattern` class, instead, they return the same instance of the `PatternBuilder` that is being used to build the current pattern. Note that we mentioned **current**, as some operations such as replacements can have an array of patterns and therefore an array of pattern builders. Below is a full list of these methods. However, since they behave similarly to the `add*()` methods, the description have been excluded.
 ```php
 1)  ->simpleCharacter( string $char )
@@ -341,7 +341,7 @@ These methods are for adding a very basic item to the pattern builder. They do n
 9)  ->simpleUnprintable( Unprintable $unprintable )
 10) ->simpleWhitespace( Whitespace $whitespace )
 ```
-####6.6.3) The `->posix*()` method set ( Advanced )
+#### 6.6.3) The `->posix*()` method set ( Advanced )
 The `->posix*()` methods will add a pre-defined posix character class as a pattern. These methods are as follows:
 
 ```php
@@ -407,14 +407,14 @@ Match uppercase alphabetical characters. Similar to `[A-Z]`.
 ```
 Match digit in a hexadecimal number (i.e., 0-9a-fA-F). Similar to `[0-9A-Fa-f]`.
 
-####6.6.4) Additional methods
+#### 6.6.4) Additional methods
 Apart from the 3 sets of above methods, `PatternBuilder` class offers 4 more methods:
 
 + `->group( \Closure $closure, string $name )`. This method allows you to define a named pattern group. The closure passed to its first argument will receive a new instance of the `PatternBuilder`, which allows you to build a complete new sub-pattern and assign a name to it. Dropping the `name` argument will generate a random name for the group.
 + `->getPatternString()` method which returns the compiled pattern.
 + `->modifiers()` method returns an instance of the modifier builder. Will be explained shortly.
 + `->raw( string $text  )` method allows you to add a raw and unescaped string to the pattern, such as `[a]{2}(foo|bar)`. The input will not be processed, so use carefully.
-####6.7) Modifier builder class
+#### 6.7) Modifier builder class
 Calling the `->modifiers()` method on the `PatternBuilder` class will return the instance of the `\OOPCRE\Foundation\Pattern\ModifierBuilder` class that is currently in use for the current pattern. It returns a new instance of the `ModifierBuilder` class if no modifier has been added to the pattern yet.
 
 This class provided the following methods, which each add one of the cases of the `OOPCRE\Foundation\Definition\Modifier` backed-enum. Each modifier is extensively explained in the `Modifier` enum class, so we will skip the description.
@@ -431,7 +431,7 @@ This class provided the following methods, which each add one of the cases of th
 
 Again, each method returns the instance of `ModifierBuilder` so you can chain the methods as long as they make sense together.
 
-####6.8) Grouping & naming patterns
+#### 6.8) Grouping & naming patterns
 As mentioned earlier, you can call the `->group()` method on the `PatternBuilder` class to group a set of patterns together. This is specially useful when working with `preg_match*` methods, that allow capturing named sub-patterns. Below is s a basic example of how to group patterns. Let's reuse of previous example:
 
 ```php
@@ -460,7 +460,7 @@ Grouping patterns also allows you to quickly find it later. The two match classe
 + `->content`. This property holds the matched string.
 + `->offset` Holds the offset from the beginning of the string, which this match happened.
 
-####6.9) Registering array of patterns
+#### 6.9) Registering array of patterns
 Certain operations such as `replaceMulti()` support array of input patterns. These operations provide a `register()` method which you can use to start registering a new pattern builder. This method returns a new instance of the pattern builder, with its own modifiers. Here's an example:
 
 ```php
@@ -483,7 +483,7 @@ $result = $multiple->execute()
 
 The `register()` method accepts either a replacement string, or a callable to be called when a replacement is about to happen. The callables are called by the php's `preg_*` functions, and receive the same arguments as they provide.
 
-####6.10) Pre-defined items
+#### 6.10) Pre-defined items
 **OOPCRE** comes with a set of pre-defined enums, that can be used in the application. The enums are located under the `/src/Foundation/Definition` directory, and are registered within the `OOPCRE\Foundation\Definition` namespace. Below is the full list of these enums and their purpose.
 
 + `Metacharacter` enum holds special regex characters known as metacharacters. You can use these cases in your regex while working with metacharacter methods.
@@ -495,7 +495,7 @@ The `register()` method accepts either a replacement string, or a callable to be
 + `Unprintable` keeps a list of unprintable characters, such as line feed and carriage return. You can use these cases while building your regex.
 + `Whitespace` is similar to `Unprintable`, except it only holds whitespace characters.
 
-###7) Helpers
+### 7) Helpers
 **OOPCRE** provides a set of traits that you can use in your projects to quickly solve common regex problems. These traits don't use **OOPCRE** internally, and don't require PHP 8.1, they have been mainly added for convenient and to cover common cases. They are located under the `/src/Helper/Common` directory and registered within `\OOPCRE\Helper\Common` namespace. A list of these traits has been included below, and you can take a look inside them to see what they offer. Enjoy!
 
 + `UserInput` provides methods of parsing and validating common user inputs. 
