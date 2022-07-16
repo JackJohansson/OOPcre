@@ -65,7 +65,7 @@ Below we will explain how to start using any regex operations, mention a list of
 To start doing any operation using **OOPCRE**, a new instance of the `\OOPCRE\Regex` class needs to be created. This
 class requires the regex subject to be passed to its constructor:
 
-```injectablephp
+```php
 /**
  * Initialize the regex operation on a given subject.
  * A subject can be any of these types:
@@ -84,57 +84,57 @@ $regex = new \OOPCRE\Regex( $subject );
 ```
 Before starting to perform any operations, we can set the configuration. We can set these configs any time before execution, but it's better to keep them on top to avoid confusion. To set a config, you can call the `setConfig()` method on the newly created `\OOPCRE\Regex` class. This method accepts an instance of the `\OOPCRE\Foundation\Definition\Option` enum as its first argument, and a value as its second argument. For example, to set the delimiter, run:
 
-```injectablephp
+```php
 $regex->setConfig( \OOPCRE\Foundation\Definition\Option::DELIMITER, '/' );
 ```
 The most common use of this would be to enable exceptions on errors, which causes the program to throw an instance of the `\OOPCRE\Foundation\Exception\RegexException` if a critical error has occurred:
 
-```injectablephp
+```php
 $regex->setConfig( \OOPCRE\Foundation\Definition\Option::ENABLE_EXCEPTIONS, TRUE );
 ```
 
 ####3.2) The `Preg*` class set
 Now that we have instantiated our subject, we can use one of the `Preg*` classes to start performing regex operations. You can access these classes by calling one of these methods on your regex subject:
 
-```injectablephp
+```php
 1) $regex->match();
 ```
 Returns an instance of the `\OOPCRE\Foundation\PCRE\PregMatch` class and is similar to `preg_match()`. This class allows you to quickly match a single string against a single pattern and check if it matches.
 
-```injectablephp
+```php
 2) $regex->matchAll();
 ```
 Returns an instance of the `\OOPCRE\Foundation\PCRE\PregMatchAll` class and works similar to `preg_match_all()` function, and `->match()` method. The difference is that it also supports capturing groups, counting results, and not stopping on first match.
 
-```injectablephp
+```php
 3) $regex->replace();
 ```
 
 Returns an instance of the `\OOPCRE\Foundation\PCRE\PregReplace` class and is similar to the `preg_replace()` function. This class allows you to replace a single pattern with a given string, which is by default set to an empty string. You can set the replacement string by calling the `->replacement()` method on this class.
 
-```injectablephp
+```php
 4) $regex->replaceMulti();
 ```
 
 Returns an instance of the `\OOPCRE\Foundation\PCRE\PregReplaceMultiple` class and allows you to replace multiple patterns with multiple strings on multiple subjects. The subject can be a string or an array with stringifyable values ( such as objects with `_toString()` method ). Explanation on how to register multiple patterns is explained on 6.9.
 
-```injectablephp
+```php
 5) $regex->filter();
 ```
 Returns an instance of the `\OOPCRE\Foundation\PCRE\PregFilter` class and behaves similar to `preg_filter()` which itself behaves like `preg_replace()`. You can use this method to replace and filter an array of subjects who match against a single pattern.
 
-```injectablephp
+```php
 6) $regex->filterMulti();
 ```
 Returns an instance of the `\OOPCRE\Foundation\PCRE\PregFilterMultiple` class and behaves similarly to the previous method, except it allows registering multiple patterns.
 
-```injectablephp
+```php
 7) $regex->grep();
 ```
 
 Returns an instance of the `\OOPCRE\Foundation\PCRE\PregGrep` class, and is similar to `preg_grep()` function. It will filter and return items from an array subject that match ( or don't match, if enabled ) against a given pattern.
 
-```injectablephp
+```php
 8) $regex->split();
 ```
 
@@ -147,7 +147,7 @@ We will try to see if the subject contains alphanumeric text, using the `match()
 
 We start building the pattern by calling the `patterns()` method:
 
-```injectablephp
+```php
 $patternBuilder = $match->patterns();
 $patternBuilder->simpleRange( [ 'a' => 'f', '0' => '9' ] );
 ```
@@ -155,7 +155,7 @@ $patternBuilder->simpleRange( [ 'a' => 'f', '0' => '9' ] );
 The above code will be compiled into `[a-zA-Z0-9]`. You can manually build and check the full pattern by calling the `getPatternString()` on the `PatternBuilder` instance, which will return the pattern string.
 After you are done with building your pattern, you can call the `execute()` method on the `match()` method ( which returned an instance of `\OOPCRE\Foundation\PCRE\PregMatch` class ) to execute the operation and get the result. This method returns a boolean which will tell you whether anything was matched, replaced or filtered:
 
-```injectablephp
+```php
 if( $match->success() ) {
     // String matched! Do some stuff.
 }
@@ -165,14 +165,14 @@ Other operations such as `matchAll()` or `filter()` provide extra methods such a
 
 ###5) Advanced Usage
 Now that we had some fun matching basic strings, let's try a real example. We will try to match an image tag inside an HTML code. Let's set some modifiers first. We'll tell the program not to stop on new lines, and ignore case:
-```injectablephp
+```php
 $match->modifiers()->caseInsensitive()->multiline();
 ```
 The `modifiers()` method returns an instance of the `\OOPCRE\Foundation\Pattern\ModifierBuilder` class, which behaves similarly to the `PatternBuilder` class. This means you can chain the modifiers as many times as you need. Now let's build the pattern.
 
 This time, we will call the `add*()` methods. These methods return an instance of the `\OOPCRE\Foundation\Pattern\Pattern` class and allow more flexibility and configurations:
 
-```injectablephp
+```php
 $patterns = $match->patterns();
 // Match an opening `<img` tag.
 $patterns->addText( '<img' );
@@ -198,7 +198,7 @@ Let's take a deeper look into the application's structure and break it down to s
 #####6.1) Regex Class
 As mentioned earlier, to start any regex operation, we need to instantiate the `\OOPCRE\Regex` class and pass our subject to it. This class provided the following methods:
 
-```injectablephp
+```php
 // Configurations
 ->configs();
 ->setConfig( $name, $value );
@@ -244,7 +244,7 @@ The `create()` method should not be directly used, and it should be used interna
 ####6.5) Quantifier builder class
 The `Pattern` class uses the `\OOPCRE\Foundation\Contract\ManagesQuantifier` trait, which allows multiple quantifiers to be applied to a pattern:
 
-```injectablephp
+```php
 ->atLeast( $min );
 ->asMost( $max );
 ->between( $min, $max );
@@ -274,62 +274,62 @@ We talked about the `Pattern` class above, and how it works. But how do we add t
 ####6.6.1) The `->add*()` method set
 These methods are prefixed with the `add` keyword, and will return an instance of the `Pattern` class. This allows us to furthermore customize the pattern, such as setting quantifiers. The full set of  `add*()` methods is as described below:
 
-```injectablephp
+```php
 1) ->addAnything()
 ``` 
 This method will match any character.
 
-```injectablephp
+```php
 2) ->addCharacter( string $char )
 ```
 This method will add a single character to the pattern.
 
-```injectablephp
+```php
 3) ->addCharacterClass( string $characters, bool $not )
 ```
 This method will add a character class match.
 
-```injectablephp
+```php
 4) ->addFloat( float $float, int $precision, bool $unsigned )
 ```
 Will add a pattern to match a floating point number.  Passing true to second argument will add the absolute value of the float number.
 
-```injectablephp
+```php
 5) ->addInteger( int $int, bool $unsigned )
 ```
 Will add a pattern to match an integer number. Passing true to second argument will add the absolute value of the integer.
 
-```injectablephp
+```php
 6) ->addMetaChar( Metacharacter $metacharacter )
 ```
 Accepts an instance of the `\OOPCRE\Foundation\Definition\Metacharacter` enum, and will add a pattern to match a pre-defined metacharacter. You can take a look at the `Metacharacter` enum for the complete list of available options.
 
-```injectablephp
+```php
 7) ->addRange( array $range, bool $not )
 ```
 Will add a character range match pattern. For example, from `h` to `t` ( passed as `[ 'h' => 't' ]` ) or from `3` to `8` ( passed as `[ 3 => 8 ]` ). Passing true to the second argument will reverse the match. Some validations will be performed to make sure the range makes sense.
 
-```injectablephp
+```php
 8) ->addText( string $text )
 ```
 will add a pattern to match a textual string, such as a word.
 
-```injectablephp
+```php
 9) ->addUnicode( string $code )
 ``` 
 Will match a unicode character. You should only pass the unicode without the `\u` prefix. For example, `3a2d1F`.
-```injectablephp
+```php
 10) ->addUnprintable( Unprintable $unprintable )
 ```
 Accepts an instance of the `\OOPCRE\Foundation\Definition\Unprintable` enum, and matches a character that can not be printed, such as line feed character.
-```injectablephp
+```php
 11) ->addWhitespace( Whitespace $whitespace )
 ```
 Will accept an instance of the `\OOPCRE\Foundation\Definition\Whitespace` enum, and will match a whitespace character. Defaults to a single space.
 
 ####6.6.2) The `->simple*()` method set
 These methods are for adding a very basic item to the pattern builder. They do not return the instance of the created `Pattern` class, instead, they return the same instance of the `PatternBuilder` that is being used to build the current pattern. Note that we mentioned **current**, as some operations such as replacements can have an array of patterns and therefore an array of pattern builders. Below is a full list of these methods. However, since they behave similarly to the `add*()` methods, the description have been excluded.
-```injectablephp
+```php
 1)  ->simpleCharacter( string $char )
 2)  ->simpleCharacterClass( string $characters, bool $not )
 3)  ->simpleFloat( float $float, int $precision, bool $unsigned )
@@ -344,65 +344,65 @@ These methods are for adding a very basic item to the pattern builder. They do n
 ####6.6.3) The `->posix*()` method set ( Advanced )
 The `->posix*()` methods will add a pre-defined posix character class as a pattern. These methods are as follows:
 
-```injectablephp
+```php
 1) ->posixAlpha()
 ```
 Match alphabetic characters. Similar to `[[:upper:][:lower:]]`;
 
-```injectablephp
+```php
 2) ->posixAlphaNumeric()
 ```
 Match alphabetic and numeric characters. Similar to `[[:alpha:][:digit:]]`;
 
-```injectablephp
+```php
 3) ->posixBlank()
 ```
 Match space or tab characters. Similar to `[ \t]`.
 
-```injectablephp
+```php
 4) ->posixCtrlChar()
 ```
 Match the control characters.
 
-```injectablephp
+```php
 5) ->posixDigit()
 ```
 Match any digit. Similar to `[0-9]`.
 
-```injectablephp
+```php
 6) ->posixGraph()
 ```
 Match Non-blank character (excludes spaces, control characters, and similar) Similar to `[^ \t\n\r\f\v]`.
 
-```injectablephp
+```php
 7) ->posixLowerCase()
 ```
 
 Match lowercase alphabetical character. Similar to `[a-z]`.
 
-```injectablephp
+```php
 8) ->posixPrint()
 ```
 Works like `[:graph:]`, but includes the space character. Similar to `[^\t\n\r\f\v]`.
 
-```injectablephp
+```php
 9) ->posixPunctuation()
 ```
 
 Match punctuation character. Similar to `[.,!?:…]`.
 
-```injectablephp
+```php
 10) ->posixSpace()
 ```
 
 Match whitespace character (`[:blank:]`, newline,  carriage return, etc.). Similar to `[ \t]`.
 
-```injectablephp
+```php
 11) ->posixUppercase()
 ```
 Match uppercase alphabetical characters. Similar to `[A-Z]`.
 
-```injectablephp
+```php
 12) ->posixHexDigit()
 ```
 Match digit in a hexadecimal number (i.e., 0-9a-fA-F). Similar to `[0-9A-Fa-f]`.
@@ -434,7 +434,7 @@ Again, each method returns the instance of `ModifierBuilder` so you can chain th
 ####6.8) Grouping & naming patterns
 As mentioned earlier, you can call the `->group()` method on the `PatternBuilder` class to group a set of patterns together. This is specially useful when working with `preg_match*` methods, that allow capturing named sub-patterns. Below is s a basic example of how to group patterns. Let's reuse of previous example:
 
-```injectablephp
+```php
 $patterns = $match->patterns();
 $patterns->addText( '<img' );
 $patterns->addCharacterClass( '>', TRUE )->unlimited();
@@ -463,7 +463,7 @@ Grouping patterns also allows you to quickly find it later. The two match classe
 ####6.9) Registering array of patterns
 Certain operations such as `replaceMulti()` support array of input patterns. These operations provide a `register()` method which you can use to start registering a new pattern builder. This method returns a new instance of the pattern builder, with its own modifiers. Here's an example:
 
-```injectablephp
+```php
 $multiple = $regex->replaceMulti();
 
 // Register 1st pattern
