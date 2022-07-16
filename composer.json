@@ -1,0 +1,31 @@
+{
+	"name" : "jackjohansson/oopcre",
+	"description" : "OOP Based Regex for PHP",
+	"type" : "project",
+	"license" : "MIT",
+	"keywords" : [
+		"oopcre",
+		"regex",
+		"pcre",
+		"pcre2",
+		"preg_match",
+		"preg_match_all",
+		"preg_replace",
+		"preg_split",
+		"preg_quote",
+		"preg_grep"
+	],
+	"autoload" : {
+		"psr-4" : {
+			"OOPCRE\\" : "src/"
+		},
+		"files" : [
+			"src/Helper/functions.php"
+		]
+	},
+	"require" : {
+		"php" : "8.1",
+		"ext-pcre" : "2.*",
+		"ext-mbstring" : "*"
+	}
+}
